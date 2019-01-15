@@ -1,3 +1,6 @@
+[![License](https://img.shields.io/badge/License-Apache%202.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
+
 # Gitlab CI/CD
 A 0 to production tutorial using Gitlab for management of continuous integration and continuous deployment. In this tutorial our setup enviroment will be:
 - GitLab `(Source base code)`

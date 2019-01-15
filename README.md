@@ -12,3 +12,23 @@ A 0 to production tutorial using Gitlab for management of continuous integration
 5. [Gitlab CI](#ci)
 6. [Deploying your application](#deploy)
 
+<div id='digital-ocean'/>
+
+### Create a droplet
+
+After made a account on [Digital Ocean website](https://www.digitalocean.com/), at the initial page you will click to create a `new project` on Digital Ocean:
+
+![Projects page](img/project.png)
+
+Now you have a project on Digital Ocean, that basically serves for centralize one, or more, droplets in a same group. You should click on `Create a droplet` to choose a type of droplet and your size. Because we are focused  on create a enviroment using Docker for deploy automatization, we'll also choose a droplet that fits with that environment.
+
+![Docker droplet](img/docker-droplet.png)
+
+Choosing a docker droplet, the `Digital Ocean` will give us a VM that already contains docker installed and also a firewall configuration that allows us to access the standard docker port remotely.
+
+#### SSH Access
+
+
+
+
+

@@ -188,9 +188,34 @@ If you chose Docker as your executor, you’ll be asked for the default image to
  alpine:latest
 ```
 
+And that's it, if you refresh your gitlab runner's page on your repository, you will see:
+
+![Runners info](img/runners.png)
+
 <div id='docker'/>
 
 ### Create a docker image
+
+Before we start to build our `.gitlab-ci.yml`, you should create your `Dockerfile` to create a docker image.
+
+#### What's docker
+
+Docker is a computer program that performs operating-system-level virtualization, also known as "containerization".
+
+#### Dockerfile
+
+Here we have a example of a Dockerfile for a Spring Boot Application, but you can create a image that will fit with your application, but remender `your runner should have the same base image.`
+
+```Dockerfile
+FROM openjdk:10.0.1-slim
+VOLUME /tmp
+COPY build/libs/*.jar app.jar
+ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
+```
+
+### Note
+
+> **You can see the official docker documentation to help you to create your own https://docs.docker.com/engine/reference/builder/**
 
 <div id='ci'/>
 

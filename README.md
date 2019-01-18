@@ -60,9 +60,28 @@ And get your public ssh key:
 
 ```
 $ cat ~/.ssh/id_rsa.pub
-ssh-rsa AAAAB3NzaC1yc2EAA...you@you-pc
+ssh-rsa AAAAB3NzaC1yc2EAAasd24cZ/124zcA...you@you-pc
 ```
 Copy and paste that on `Digital Ocean`, and that's it.
 
 And after all, click on `Create`. 
 
+<div id='config'/>
+
+### Configure your droplet
+
+<div id='runner'/>
+
+### Create a gitlab runner
+
+<div id='docker'/>
+
+### Create a docker image
+
+<div id='ci'/>
+
+### Gitlab CI
+
+<div id='deploy'/>
+
+### Deploying your application

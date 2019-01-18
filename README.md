@@ -107,6 +107,86 @@ To                         Action      From
 <div id='runner'/>
 
 ### Create a gitlab runner
+#### What is it
+
+GitLab Runner is the open source project that is used to run your jobs and send the results back to GitLab. It is used in conjunction with GitLab CI, the open-source continuous integration service included with GitLab that coordinates the jobs.
+
+#### Install
+Simply download one of the binaries for your system:
+
+```
+# Linux x86-64
+ $ sudo wget -O /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-amd64
+
+ # Linux x86
+ $ sudo wget -O /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-386
+
+ # Linux arm
+ $ sudo wget -O /usr/local/bin/gitlab-runner https://gitlab-runner-downloads.s3.amazonaws.com/latest/binaries/gitlab-runner-linux-arm
+```
+
+Give it permissions to execute:
+
+```
+$ sudo chmod +x /usr/local/bin/gitlab-runner
+```
+
+Install and run as service:
+
+```
+$ sudo gitlab-runner install
+$ sudo gitlab-runner start
+```
+
+#### Register a runner
+Go back on your Gitlab project, on the lateral menu
+
+`Settings > CI/CD > Runners (Expand)`
+
+![Gitlab](img/gitlab.png)
+
+First of all, click on `Disable Shared Runners`
+
+Then go back to your droplet terminal and:
+
+```
+$ sudo gitlab-runner register
+```
+
+Enter your GitLab instance URL:
+
+```
+ Please enter the gitlab-ci coordinator URL (e.g. https://gitlab.com )
+ https://gitlab.com
+```
+
+Enter the token you obtained to register the Runner:
+
+```
+Please enter the gitlab-ci token for this runner
+xxxxxx
+```
+
+Enter the [tags associated with the Runner](https://docs.gitlab.com/ee/ci/runners/#using-tags), you can change this later in GitLab’s UI:
+
+```
+ Please enter the gitlab-ci tags for this runner (comma separated):
+ build,test,prod,...
+```
+
+Enter the Runner executor:
+
+```
+ Please enter the executor: ssh, docker+machine, docker-ssh+machine, kubernetes, docker, parallels, virtualbox, docker-ssh, shell:
+ docker
+```
+
+If you chose Docker as your executor, you’ll be asked for the default image to be used for projects that do not define one in `.gitlab-ci.yml`:
+
+```
+ Please enter the Docker image (eg. ruby:2.1):
+ alpine:latest
+```
 
 <div id='docker'/>
 

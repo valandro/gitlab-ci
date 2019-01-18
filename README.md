@@ -224,3 +224,6 @@ ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
 <div id='deploy'/>
 
 ### Deploying your application
+
+### License
+Apache License. [Click here for more information.](LICENSE)

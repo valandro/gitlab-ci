@@ -69,6 +69,40 @@ And after all, click on `Create`.
 <div id='config'/>
 
 ### Configure your droplet
+After the creation of your droplet, you will able to see some information about the droplet, and the most important : `IP Address`
+
+![IP](img/droplet.png)
+
+Now, open a terminal and type
+
+```
+$ ssh root@your.ip.address
+```
+
+![Terminal](img/terminal.png)
+
+### Note
+
+> **If you can't connect remotely with some error like Connection Refused, maybe you should use the Digital Ocean Console Launcher for add manually your public ssh key on this  folder: ~/.ssh/authorized_keys**
+
+Checking your firewall, you will see what ports are available to remote access. On the initial configuration you only have `SSH and Docker ports.`
+
+```
+$ ufw status
+Status: active
+To                         Action      From
+--                         ------      ----
+22/tcp                     ALLOW       Anywhere
+2375/tcp                   ALLOW       Anywhere
+2376/tcp                   ALLOW       Anywhere
+22/tcp (v6)                ALLOW       Anywhere (v6)
+2375/tcp (v6)              ALLOW       Anywhere (v6)        
+2376/tcp (v6)              ALLOW       Anywhere (v6)
+```
+
+### Note
+
+> **After you start a deploy your applications on this droplet, you should change this firewall configuration or also configure a proxy for remote access to your applications.**
 
 <div id='runner'/>
 

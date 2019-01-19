@@ -4,9 +4,13 @@
 # Gitlab CI/CD
 A **zero to production** tutorial using Gitlab for CI/CD management. In this tutorial the setup enviroment will be:
 
-- GitLab `(Source base code)`
+- GitLab `(Code repository)`
 - Digital Ocean `(Infrastructure)`
 - Docker `(Containers)`
+
+### Note
+
+> **You don't need to use Gitlab as your code repository exactly, you also can use Github, check this link if you want to use Gitlab only for manage your CI/CD https://docs.gitlab.com/ee/ci/ci_cd_for_external_repos/github_integration.html**
 
 ## Summary
 1. [Create a droplet](#digital-ocean)

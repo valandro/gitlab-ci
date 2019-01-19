@@ -276,8 +276,6 @@ That will allow us to send the files and execute commands inside of `.gitlab-ci.
 
 #### Create a gitlab-ci.yml
 
-<div id='deploy'/>
-
 ```yml
 image: openjdk:10.0.1-slim
 
@@ -392,13 +390,20 @@ script:
 > **You can check a complete documentation guide on the official gitlab page https://docs.gitlab.com/ee/ci/yaml/** 
 
 
+<div id='deploy'/>
+
+
 ### Deploying your application
 
-It's simple, you add a `.gitlab-ci.yml` and a `Dockerfile` in your gitlab repository, commit and that's it.
+It's simple, you add a `.gitlab-ci.yml` and a `Dockerfile` in your project root folder, commit and that's it.
 
 On your gitlab repository, in `CI/CD` menu you will see something like that:
 
 ![Deploy CI/CD](img/deploy.png)
+
+And that's it. 
+
+If you have any doubt about this tutorial, just ask me!
 
 ### License
 Apache License. [Click here for more information.](LICENSE)

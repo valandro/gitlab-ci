@@ -1,0 +1,58 @@
+image: openjdk:10.0.1-slim
+
+stages:
+  - build
+  - deploy_test
+
+variables:
+  SERVICE_NAME: 'java-auth-spring'
+  DEPLOY_PATH: '/home/projects/$SERVICE_NAME'
+  SERVICE_DIST_FILE_PATH: 'build/libs/*.jar'
+  APP_PORT: 8090
+  DISTRIBUTION: '0.0.1-SNAPSHOT'
+
+before_script:
+  - echo "Before script..."
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+  - apt-get -y install zip unzip
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+
+build:
+  stage: build
+  script:
+  - echo "Initiliaze build task..."
+  - ./gradlew clean build
+  - echo "Finalized build task..."
+  artifacts:
+    untracked: true
+  tags:
+    - build
+
+deploy_test:
+  variables:
+    DEPLOY_HOST: 'root@your-ip-addres'
+    DEPLOY_PATH: 'deploy-path/$SERVICE_NAME'
+    DIST_FILE: '$SERVICE_NAME-$DISTRIBUTION.jar'
+    DOCKER_IMAGE_NAME: '$SERVICE_NAME/java'
+  stage: deploy_test
+  tags:
+    - deploy_test
+  dependencies:
+  - build
+  script:
+  - echo "Deploy prod starting..."
+  - ssh -o StrictHostKeyChecking=no $DEPLOY_HOST 'exit'
+  - ssh $DEPLOY_HOST "rm -rf $DEPLOY_PATH/*"
+  - ssh $DEPLOY_HOST "mkdir -p $DEPLOY_PATH/"
+  - zip -r $DIST_FILE Dockerfile $SERVICE_DIST_FILE_PATH
+  - scp $DIST_FILE $DEPLOY_HOST:$DEPLOY_PATH/
+  - ssh $DEPLOY_HOST "unzip $DEPLOY_PATH/$DIST_FILE -d $DEPLOY_PATH/"
+  - ssh $DEPLOY_HOST "rm $DEPLOY_PATH/$DIST_FILE"
+  - ssh $DEPLOY_HOST "docker system prune -f"
+  - ssh $DEPLOY_HOST "cd $DEPLOY_PATH/ && docker build -f Dockerfile -t $DOCKER_IMAGE_NAME ."
+  - ssh $DEPLOY_HOST "docker stop $SERVICE_NAME || true && docker rm $SERVICE_NAME || true"
+  - ssh $DEPLOY_HOST "docker run -e APP_PORT=$APP_PORT -p $APP_PORT:$APP_PORT --name $SERVICE_NAME -d $DOCKER_IMAGE_NAME"
+  - echo "Deploy prod finished"

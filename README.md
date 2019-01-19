@@ -15,6 +15,8 @@ A **zero to production** tutorial using Gitlab for CI/CD management. In this tut
 3. [Create a gitlab runner](#runner)
 4. [Create a docker image](#docker)
 5. [Gitlab CI](#ci)
+    1. [Enviroment Variables](#ci-ssh)
+    2. [Create a gitlab-ci.yml](#ci-yml)
 6. [Deploying your application](#deploy)
 
 <div id='digital-ocean'/>
@@ -39,7 +41,7 @@ Choosing a docker droplet, the `Digital Ocean` will give us a VM that already co
 
 #### SSH Access
 
-Add your public ssh key to `Digital Ocean`. 
+Add your public ssh key to `Digital Ocean`. You need to create a ssh from the machine that you want to access remotely your droplet. 
 
 ![SSH](img/ssh-key.png)
 
@@ -221,9 +223,45 @@ ENTRYPOINT ["java","-Djava.security.egd=file:/dev/./urandom","-jar","/app.jar"]
 
 ### Gitlab CI
 
+<div id='ci-ssh'/>
+
+#### Enviroment Variables
+Before we create the `.gitlab-ci.yml`, you need to generate a `private ssh key` on your **droplet**. It's simple, it's the same steps that we did before, but now in your droplet.
+
+```
+$ ssh-keygen -o
+Generating public/private rsa key pair.
+Enter file in which to save the key (/home/you/.ssh/id_rsa):
+Created directory '/home/you/.ssh'.
+Enter passphrase (empty for no passphrase):
+Enter same passphrase again:
+Your identification has been saved in /home/you/.ssh/id_rsa.
+Your public key has been saved in /home/you/.ssh/id_rsa.pub.
+```
+
+And get your **private ssh key**: 
+
+```
+$ cat ~/.ssh/id_rsa
+-----BEGIN RSA PRIVATE KEY-----
+MIIEpAIBAAKCAQEAnjPlxuZelQFBCTllfxErc6PNJ+U6f3zt03jf8/ckB3UonRmS ...
+-----END RSA PRIVATE KEY-----
+```
+
+Copy, paste and create a variable called **SSH_PRIVATE_KEY** in `Gitlab Enviroment Variables`
+
+![Gitlab SSH](img/gitlab-ssh.png)
+
+That will allow us to send the files and execute commands inside of `.gitlab-ci.yml.`
+
+<div id='ci-yml'/>
+
+#### Create a gitlab-ci.yml
+
 <div id='deploy'/>
 
 ### Deploying your application
+
 
 ### License
 Apache License. [Click here for more information.](LICENSE)

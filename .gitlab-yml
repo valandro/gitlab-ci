@@ -5,10 +5,10 @@ stages:
   - deploy_test
 
 variables:
-  SERVICE_NAME: 'java-auth-spring'
+  SERVICE_NAME: 'service-name'
   DEPLOY_PATH: '/home/projects/$SERVICE_NAME'
   SERVICE_DIST_FILE_PATH: 'build/libs/*.jar'
-  APP_PORT: 8090
+  APP_PORT: 8080
   DISTRIBUTION: '0.0.1-SNAPSHOT'
 
 before_script:

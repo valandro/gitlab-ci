@@ -278,8 +278,127 @@ That will allow us to send the files and execute commands inside of `.gitlab-ci.
 
 <div id='deploy'/>
 
+```yml
+image: openjdk:10.0.1-slim
+
+stages:
+  - build
+  - deploy_test
+```
+
+**image:** Defines a docker image that you're using.
+**stages:** Defines a job stage (ex.: build_app).
+
+> These stages names not necessary should be equals to your tags name, that was defined on your `gitlab runner.`
+
+```yml
+variables:
+  SERVICE_NAME: 'service-name'
+  DEPLOY_PATH: '/home/projects/$SERVICE_NAME'
+  SERVICE_DIST_FILE_PATH: 'build/libs/*.jar'
+  APP_PORT: 8080
+  DISTRIBUTION: '0.0.1-SNAPSHOT'
+```
+
+**variables:** Define job variables on a job level.
+
+```yml
+before_script:
+  - echo "Before script..."
+  - 'which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )'
+  - apt-get -y install zip unzip
+  - eval $(ssh-agent -s)
+  - echo "$SSH_PRIVATE_KEY" | tr -d '\r' | ssh-add - > /dev/null
+  - mkdir -p ~/.ssh
+  - chmod 700 ~/.ssh
+```
+
+**before_script:** Override a set of commands that are executed before job
+
+> Here we're installing ssh to can connect to our droplet on Digital Ocean.
+
+```yml
+build:
+  stage: build
+  script:
+  - echo "Initiliaze build task..."
+  - ./gradlew clean build
+  - echo "Finalized build task..."
+  artifacts:
+    untracked: true
+  tags:
+    - build
+```
+
+**script:** Defines a shell script which is executed by Runner.
+
+**artifacts:** Define list of [job artifacts](https://docs.gitlab.com/ee/ci/yaml/#artifacts)
+
+**tags:** Defines a list of tags which are used to select Runner.
+
+> Here defined a simple pipeline stage called `build`, that have a single responsability: **guarantee that application it's building**. If no error ocurred, then we'll get the artifacts created to our next stage.
+
+```yml
+deploy_test:
+  variables:
+    DEPLOY_HOST: 'root@your-ip-addres'
+    DEPLOY_PATH: 'deploy-path/$SERVICE_NAME'
+    DIST_FILE: '$SERVICE_NAME-$DISTRIBUTION.jar'
+    DOCKER_IMAGE_NAME: '$SERVICE_NAME/java'
+  stage: deploy_test
+  tags:
+    - deploy_test
+  dependencies:
+  - build
+```
+
+**dependencies:** Define other jobs that a job depends on so that you can pass artifacts between them
+
+And finally, here we have the script that deploy our application, in a `Docker container` inside a `Digital Ocean` droplet.
+
+```yml
+script:
+  - echo "Deploy prod starting..."
+  - ssh -o StrictHostKeyChecking=no $DEPLOY_HOST 'exit'
+  - ssh $DEPLOY_HOST "rm -rf $DEPLOY_PATH/*"
+  - ssh $DEPLOY_HOST "mkdir -p $DEPLOY_PATH/"
+  - zip -r $DIST_FILE Dockerfile $SERVICE_DIST_FILE_PATH
+  - scp $DIST_FILE $DEPLOY_HOST:$DEPLOY_PATH/
+  - ssh $DEPLOY_HOST "unzip $DEPLOY_PATH/$DIST_FILE -d $DEPLOY_PATH/"
+  - ssh $DEPLOY_HOST "rm $DEPLOY_PATH/$DIST_FILE"
+  - ssh $DEPLOY_HOST "docker system prune -f"
+  - ssh $DEPLOY_HOST "cd $DEPLOY_PATH/ && docker build -f Dockerfile -t $DOCKER_IMAGE_NAME ."
+  - ssh $DEPLOY_HOST "docker stop $SERVICE_NAME || true && docker rm $SERVICE_NAME || true"
+  - ssh $DEPLOY_HOST "docker run -e APP_PORT=$APP_PORT -p $APP_PORT:$APP_PORT --name $SERVICE_NAME -d $DOCKER_IMAGE_NAME"
+  - echo "Deploy prod finished"
+```
+
+#### Comments about deploy script
+
+* StrictHostKeyChecking=no allows you to disable strict host key checking
+
+* Then we delete the previous folder that contains your app and create a new one.
+
+* Then we zip our files and send them to the droplet for unzip there.
+
+* Remove all unused containers, networks, images (both dangling and unreferenced), and optionally, volumes with `docker system prune -f`.
+
+* We use `cd command` to go for the folder that have the files and them create a docker image using the `Dockerfile`.
+
+* Them stop previous docker container running your service, with pipe true because you couldn't have a docker container with your `$SERVICE_NAME`.
+
+* And finally use docker run for running a new container with the image that you created.
+
+> **You can check a complete documentation guide on the official gitlab page https://docs.gitlab.com/ee/ci/yaml/** 
+
+
 ### Deploying your application
 
+It's simple, you add a `.gitlab-ci.yml` and a `Dockerfile` in your gitlab repository, commit and that's it.
+
+On your gitlab repository, in `CI/CD` menu you will see something like that:
+
+![Deploy CI/CD](img/deploy.png)
 
 ### License
 Apache License. [Click here for more information.](LICENSE)

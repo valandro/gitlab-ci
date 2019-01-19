@@ -13,6 +13,8 @@ A **zero to production** tutorial using Gitlab for CI/CD management. In this tut
     1. [Create a public key](#ssh)
 2. [Configure your droplet](#config)
 3. [Create a gitlab runner](#runner)
+    1. [Install gitlab runner](#runner-install)
+    2. [Register a runner](#runner-register)
 4. [Create a docker image](#docker)
 5. [Gitlab CI](#ci)
     1. [Enviroment Variables](#ci-ssh)
@@ -113,7 +115,13 @@ To                         Action      From
 
 GitLab Runner is the open source project that is used to run your jobs and send the results back to GitLab. It is used in conjunction with GitLab CI, the open-source continuous integration service included with GitLab that coordinates the jobs.
 
+<div id='runner-install'/>
+
+
 #### Install
+
+Follow these steps for install `gitlab runner` on your droplet:
+
 Simply download one of the binaries for your system:
 
 ```
@@ -139,6 +147,9 @@ Install and run as service:
 $ sudo gitlab-runner install
 $ sudo gitlab-runner start
 ```
+
+<div id='runner-register'/>
+
 
 #### Register a runner
 Go back on your Gitlab project, on the lateral menu

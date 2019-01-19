@@ -82,9 +82,9 @@ Now, open a terminal and type
 ```
 $ ssh root@your.ip.address
 ```
-<div style="text-align:center">
-    <img src="img/terminal.png" />
-</div>
+<p align="center">
+  <img src="img/terminal.png" alt="Terminal Image"/>
+</p>
 
 ### Note
 
@@ -204,9 +204,9 @@ If you chose Docker as your executor, you’ll be asked for the default image to
 
 And that's it, if you refresh your gitlab runner's page on your repository, you will see:
 
-<div style="text-align:center">
-    <img src="img/runners.png" />
-</div>
+<p align="center">
+  <img src="img/runners.png" alt="Runners Image"/>
+</p>
 
 <div id='docker'/>
 
